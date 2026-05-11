@@ -1,0 +1,1352 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Lyrical — Nikos Acuna</title>
+
+<style>
+  @font-face {
+    font-family: 'Helvetica Neue Local';
+    src: local('Helvetica Neue Light'), local('HelveticaNeue-Light'), local('Helvetica Neue'), local('Helvetica');
+    font-weight: 300; font-style: normal;
+  }
+  @font-face {
+    font-family: 'Futura Local';
+    src: local('Futura Light'), local('Futura-Light'), local('Futura'), local('Avenir Next Light'), local('Avenir Light');
+    font-weight: 300; font-style: normal;
+  }
+
+  :root {
+    --paper: #000000;
+    --ink: #ffffff;
+    --muted: #8a8a8a;
+    --hairline: #ffffff1a;
+    --hairline-strong: #ffffff33;
+    --mineral: #2238a8;
+    --mineral-soft: #2238a819;
+    --grid-col: 1fr;
+    --hel: 'Helvetica Neue Local', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --futura: 'Futura Local', Futura, 'Avenir Next', 'Century Gothic', sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--hel);
+    font-weight: 300;
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+  ::selection { background: var(--mineral); color: #fff; }
+
+  /* ---- shared ---- */
+  .wrap { max-width: 1680px; margin: 0 auto; padding: 0 64px; }
+  .wrap-tight { max-width: 1280px; margin: 0 auto; padding: 0 64px; }
+  .label {
+    font-family: var(--futura);
+    font-weight: 300;
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .label-muted {
+    font-family: var(--futura);
+    font-weight: 300;
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .hair { height: 1px; background: var(--ink); }
+  .hairline { height: 1px; background: var(--hairline-strong); }
+
+  /* ---- reveal ---- */
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 1.4s cubic-bezier(.2,.7,.2,1), transform 1.4s cubic-bezier(.2,.7,.2,1); }
+  .reveal.in { opacity: 1; transform: none; }
+  .reveal.d1 { transition-delay: 0.1s; }
+  .reveal.d2 { transition-delay: 0.2s; }
+  .reveal.d3 { transition-delay: 0.3s; }
+  .reveal.d4 { transition-delay: 0.4s; }
+
+  /* ============================================================ */
+  /* NAV — sparse, sticky                                         */
+  /* ============================================================ */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: grid; grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 22px 64px;
+    background: color-mix(in oklab, var(--paper) 92%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .nav .brand {
+    font-family: var(--futura);
+    font-weight: 300;
+    font-size: 13px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+  }
+  .nav .center {
+    display: flex; gap: 40px; justify-content: center;
+    font-family: var(--futura);
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+  .nav .center a { color: var(--muted); transition: color .3s; }
+  .nav .center a:hover, .nav .center a.active { color: var(--ink); }
+  .nav .right {
+    text-align: right;
+    font-family: var(--futura);
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ============================================================ */
+  /* HERO                                                         */
+  /* ============================================================ */
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 760px;
+    border-bottom: 1px solid var(--hairline-strong);
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    z-index: 0;
+  }
+  .hero-bg img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: right center;
+    filter: grayscale(0.05) contrast(1.04);
+  }
+  .hero-bg::after {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(90deg, #000 0%, rgba(0,0,0,0.85) 35%, rgba(0,0,0,0.25) 70%, rgba(0,0,0,0.0) 100%),
+      linear-gradient(0deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 35%);
+    pointer-events: none;
+  }
+  .hero-inner {
+    position: relative; z-index: 2;
+    height: 100%;
+    display: flex; flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 0 80px;
+  }
+  .hero-title {
+    font-family: var(--hel);
+    font-weight: 300;
+    font-size: clamp(80px, 13vw, 220px);
+    line-height: 0.88;
+    letter-spacing: -0.045em;
+    margin: 0;
+    mix-blend-mode: difference;
+    color: #ffffff;
+  }
+  .hero-title .br { display: block; }
+  .hero-title .dot { color: var(--mineral); }
+  .hero-foot {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 64px; margin-top: 56px;
+    padding-top: 24px;
+    align-items: start;
+  }
+  .hero-lede {
+    font-size: 16px; line-height: 1.55; font-weight: 300;
+    max-width: 460px;
+    color: var(--ink);
+  }
+  .hero-credit {
+    text-align: right;
+  }
+  .hero-image .cap {
+    position: absolute; bottom: 16px; left: 16px;
+    font-family: var(--futura);
+    font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ============================================================ */
+  /* AT A GLANCE — stats bar                                      */
+  /* ============================================================ */
+  .glance {
+    border-top: 1px solid var(--hairline-strong);
+    border-bottom: 1px solid var(--hairline-strong);
+  }
+  .glance-label {
+    padding: 22px 24px 12px;
+    font-family: var(--futura);
+    font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--mineral);
+  }
+  .glance-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--hairline);
+  }
+  .glance-cell {
+    padding: 40px 24px 44px;
+    border-right: 1px solid var(--hairline);
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .glance-cell:last-child { border-right: 0; }
+  .glance-cell .stat {
+    font-family: var(--hel);
+    font-weight: 300;
+    font-size: clamp(48px, 6vw, 76px);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .glance-cell .stat .plus { color: var(--mineral); font-weight: 300; }
+  .glance-cell .cap {
+    font-family: var(--futura);
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--muted);
+    line-height: 1.5;
+    max-width: 26ch;
+  }
+  @media (max-width: 760px) {
+    .glance-grid { grid-template-columns: repeat(2, 1fr); }
+    .glance-cell:nth-child(2) { border-right: 0; }
+    .glance-cell:nth-child(1), .glance-cell:nth-child(2) { border-bottom: 1px solid var(--hairline); }
+  }
+
+  /* ============================================================ */
+  /* INDEX BAR                                                    */
+  /* ============================================================ */
+  .index-bar {
+    border-bottom: 1px solid var(--hairline-strong);
+    display: grid; grid-template-columns: repeat(8, 1fr);
+    font-family: var(--futura);
+    font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+  }
+  .index-bar .ix {
+    padding: 22px 16px;
+    border-right: 1px solid var(--hairline);
+    color: var(--muted);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .index-bar .ix:last-child { border-right: 0; }
+  .index-bar .ix .n { color: var(--mineral); }
+  .index-bar .ix .v { color: var(--ink); font-size: 11px; }
+
+  /* ============================================================ */
+  /* CHAPTER — section header                                     */
+  /* ============================================================ */
+  .chapter {
+    padding: 120px 0 64px;
+    display: grid;
+    grid-template-columns: 200px 1fr 200px;
+    gap: 48px;
+    align-items: start;
+    border-top: 1px solid var(--hairline-strong);
+  }
+  .chapter .num {
+    font-family: var(--futura); font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--mineral);
+  }
+  .chapter h2 {
+    font-family: var(--hel);
+    font-weight: 300;
+    font-size: clamp(48px, 5.5vw, 88px);
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    margin: 0;
+    max-width: 1000px;
+  }
+  .chapter .meta {
+    font-family: var(--futura);
+    font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--muted); text-align: right;
+    line-height: 2;
+  }
+
+  /* ============================================================ */
+  /* STATEMENT                                                    */
+  /* ============================================================ */
+  .statement {
+    padding: 32px 0 160px;
+  }
+  .statement-body {
+    font-family: var(--hel);
+    font-weight: 300;
+    font-size: clamp(28px, 3.2vw, 48px);
+    line-height: 1.18;
+    letter-spacing: -0.022em;
+    max-width: 1280px;
+    margin-left: 248px;
+  }
+  .statement-body .em { color: var(--mineral); }
+  .statement-body .dim { color: var(--muted); }
+
+  /* ============================================================ */
+  /* PILLARS — four rows                                          */
+  /* ============================================================ */
+  .pillars { border-top: 1px solid var(--hairline-strong); }
+  .pillar {
+    display: grid;
+    grid-template-columns: 200px 200px 1fr 200px;
+    gap: 48px; align-items: start;
+    padding: 36px 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .pillar:hover { background: #0a0a0a; }
+  .pillar .n { font-family: var(--futura); font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--mineral); }
+  .pillar .t { font-family: var(--futura); font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink); }
+  .pillar h4 { font-family: var(--hel); font-weight: 300; font-size: clamp(24px, 2.4vw, 36px); line-height: 1.1; letter-spacing: -0.02em; margin: 0; }
+  .pillar p { margin: 0; max-width: 360px; font-size: 13.5px; line-height: 1.55; color: var(--muted); text-align: right; }
+
+  /* ============================================================ */
+  /* PRACTICES — gallery rooms                                    */
+  /* ============================================================ */
+  .practices { padding: 0; }
+  .practice {
+    display: grid;
+    grid-template-columns: 200px 1fr 1fr;
+    gap: 64px;
+    padding: 120px 0;
+    border-top: 1px solid var(--hairline-strong);
+    align-items: start;
+  }
+  .practice .meta {
+    display: flex; flex-direction: column; gap: 16px;
+    font-family: var(--futura); font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase;
+  }
+  .practice .meta .n { color: var(--mineral); }
+  .practice .meta .nm { color: var(--ink); font-size: 11px; }
+  .practice .meta .yr { color: var(--muted); }
+  .practice .copy h3 {
+    font-family: var(--hel); font-weight: 300;
+    font-size: clamp(48px, 5.5vw, 88px);
+    line-height: 0.98; letter-spacing: -0.03em;
+    margin: 0 0 32px;
+  }
+  .practice .copy p {
+    font-size: 16.5px; line-height: 1.55; color: var(--ink);
+    max-width: 460px; margin: 0;
+  }
+  .practice .copy .tags {
+    margin-top: 28px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    border-top: 1px solid var(--hairline);
+    max-width: 460px;
+  }
+  .practice .copy .tags .row {
+    display: contents;
+  }
+  .practice .copy .tags .k, .practice .copy .tags .v {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--hairline);
+    font-family: var(--futura);
+    font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase;
+  }
+  .practice .copy .tags .k { color: var(--muted); }
+  .practice .copy .tags .v { color: var(--ink); }
+  .practice .visual {
+    aspect-ratio: 4/5;
+    position: relative; overflow: hidden;
+    background: #0a0a0a;
+  }
+  .practice .visual .stripe {
+    position: absolute; inset: 0;
+  }
+  .practice.v-arc .visual .stripe {
+    background:
+      repeating-linear-gradient(0deg, transparent 0 5px, rgba(255,255,255,0.04) 5px 6px),
+      linear-gradient(180deg, #161616 0%, #322a20 100%);
+  }
+  .practice.v-aiml .visual .stripe {
+    background:
+      repeating-linear-gradient(90deg, transparent 0 12px, rgba(255,255,255,0.05) 12px 13px),
+      linear-gradient(135deg, #121212 0%, #3a3025 100%);
+  }
+  .practice.v-venture .visual .stripe {
+    background:
+      repeating-linear-gradient(45deg, transparent 0 8px, rgba(255,255,255,0.04) 8px 9px),
+      linear-gradient(180deg, #141414 0%, #4a3a28 100%);
+  }
+  .practice .visual .cap {
+    position: absolute; bottom: 16px; left: 16px;
+    font-family: var(--futura); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  /* ============================================================ */
+  /* WORK INDEX                                                   */
+  /* ============================================================ */
+  .work-index { border-top: 1px solid var(--ink); }
+  .work-row {
+    display: grid;
+    grid-template-columns: 60px 1.6fr 1fr 220px 40px;
+    align-items: baseline;
+    gap: 32px;
+    padding: 32px 0;
+    border-bottom: 1px solid var(--hairline);
+    cursor: pointer;
+    position: relative;
+    transition: padding 0.7s cubic-bezier(.2,.7,.2,1);
+  }
+  .work-row:hover { padding-left: 16px; }
+  .work-row .n {
+    font-family: var(--futura); font-size: 10.5px; letter-spacing: 0.22em; color: var(--muted);
+  }
+  .work-row .ttl {
+    font-family: var(--hel); font-weight: 300;
+    font-size: clamp(28px, 3vw, 44px);
+    line-height: 1.05; letter-spacing: -0.025em;
+    transition: color .4s;
+  }
+  .work-row:hover .ttl { color: var(--mineral); }
+  .work-row .type, .work-row .yr {
+    font-family: var(--futura);
+    font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .work-row .yr { text-align: right; }
+  .work-row .arr { text-align: right; font-family: var(--hel); font-weight: 300; font-size: 24px; opacity: 0.3; transition: opacity .3s, transform .4s; }
+  .work-row:hover .arr { opacity: 1; transform: translateX(6px); color: var(--mineral); }
+
+  /* hover preview */
+  .preview-tile {
+    position: fixed; pointer-events: none;
+    width: 280px; aspect-ratio: 4/5;
+    opacity: 0; transition: opacity .3s; z-index: 50;
+    overflow: hidden;
+  }
+  .preview-tile.on { opacity: 1; }
+  .preview-tile .stripe { position: absolute; inset: 0; }
+  .preview-tile[data-bg="a"] .stripe { background: repeating-linear-gradient(0deg, transparent 0 5px, rgba(255,255,255,0.05) 5px 6px), linear-gradient(180deg, #141414 0%, #3a2e20 100%); }
+  .preview-tile[data-bg="b"] .stripe { background: repeating-linear-gradient(90deg, transparent 0 12px, rgba(255,255,255,0.06) 12px 13px), linear-gradient(135deg, #121212 0%, #4a3a28 100%); }
+  .preview-tile[data-bg="c"] .stripe { background: repeating-linear-gradient(45deg, transparent 0 8px, rgba(255,255,255,0.05) 8px 9px), linear-gradient(180deg, #141414 0%, #3a2e22 100%); }
+  .preview-tile .cap { position: absolute; bottom: 14px; left: 14px; font-family: var(--futura); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink); }
+
+  /* ============================================================ */
+  /* CASE — editorial spread                                      */
+  /* ============================================================ */
+  .case { padding: 160px 0; border-top: 1px solid var(--hairline-strong); }
+  .case-head {
+    display: grid; grid-template-columns: 200px 1fr 240px;
+    gap: 48px; align-items: end;
+    margin-bottom: 80px;
+  }
+  .case-head .meta { font-family: var(--futura); font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); line-height: 2; }
+  .case-head .meta .v { color: var(--ink); }
+  .case-head h2 {
+    font-family: var(--hel); font-weight: 300;
+    font-size: clamp(72px, 9.5vw, 160px);
+    line-height: 0.92; letter-spacing: -0.04em;
+    margin: 0;
+  }
+  .case-spread {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 64px; align-items: start;
+  }
+  .case-img {
+    aspect-ratio: 4/5;
+    position: relative; overflow: hidden;
+    background: #0a0a0a;
+  }
+  .case-img .stripe { position:absolute; inset:0; }
+  .case-img.a .stripe { background: repeating-linear-gradient(0deg, transparent 0 7px, rgba(255,255,255,0.05) 7px 8px), linear-gradient(180deg, #141414 0%, #3a2e20 100%); }
+  .case-img.b .stripe { background: repeating-linear-gradient(15deg, transparent 0 10px, rgba(255,255,255,0.05) 10px 11px), linear-gradient(135deg, #121212 0%, #4a3a28 100%); }
+  .case-img .cap { position:absolute; bottom:16px; left:16px; font-family: var(--futura); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink); }
+  .case-body { padding-top: 8px; }
+  .case-body .step {
+    padding: 24px 0; border-top: 1px solid var(--hairline);
+    display: grid; grid-template-columns: 120px 1fr; gap: 32px;
+  }
+  .case-body .step:last-child { border-bottom: 1px solid var(--hairline); }
+  .case-body .step h5 { margin: 0; font-family: var(--futura); font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); }
+  .case-body .step p { margin: 0; font-size: 15.5px; line-height: 1.6; color: var(--ink); }
+  .case-result {
+    margin-top: 80px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    padding-top: 48px;
+    border-top: 1px solid var(--ink);
+    align-items: center;
+  }
+  .case-result .num {
+    font-family: var(--hel); font-weight: 300;
+    font-size: clamp(120px, 15vw, 220px);
+    line-height: 0.85; letter-spacing: -0.04em;
+    color: var(--ink);
+  }
+  .case-result .num .small { font-size: 0.4em; vertical-align: top; color: var(--mineral); }
+  .case-result .num .pct { color: var(--mineral); }
+  .case-result .copy { font-family: var(--hel); font-weight: 300; font-size: 22px; line-height: 1.4; color: var(--ink); max-width: 540px; }
+
+  /* ============================================================ */
+  /* CAPABILITIES                                                 */
+  /* ============================================================ */
+  .caps {
+    border-top: 1px solid var(--ink);
+    display: grid; grid-template-columns: repeat(3, 1fr);
+  }
+  .cap {
+    padding: 36px 32px 56px;
+    border-right: 1px solid var(--hairline);
+    border-bottom: 1px solid var(--hairline);
+    display: flex; flex-direction: column;
+    min-height: 260px;
+    background: var(--paper);
+    transition: background 0.4s;
+  }
+  .cap:nth-child(3n) { border-right: 0; }
+  .cap:hover { background: #0a0a0a; }
+  .cap .n {
+    font-family: var(--futura); font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--mineral);
+    margin-bottom: 36px;
+    display: flex; justify-content: space-between;
+  }
+  .cap h4 { font-family: var(--hel); font-weight: 300; font-size: 26px; line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 16px; }
+  .cap p { font-size: 13.5px; line-height: 1.55; color: var(--muted); margin: 0; }
+
+  /* ============================================================ */
+  /* CLIENTS                                                      */
+  /* ============================================================ */
+  .clients { border-top: 1px solid var(--ink); }
+  .client-row {
+    display: grid; grid-template-columns: 240px 1fr 80px;
+    gap: 48px; align-items: baseline;
+    padding: 36px 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .client-row .k { font-family: var(--futura); font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); }
+  .client-row .v { font-family: var(--hel); font-weight: 300; font-size: clamp(22px, 2.2vw, 32px); line-height: 1.2; letter-spacing: -0.02em; }
+  .client-row .v .sep { color: var(--muted); padding: 0 8px; font-size: 0.7em; vertical-align: middle; }
+  .client-row .ct { font-family: var(--futura); font-size: 10.5px; letter-spacing: 0.22em; color: var(--muted); text-align: right; }
+
+  /* ============================================================ */
+  /* WORLDVIEW — quiet quote                                      */
+  /* ============================================================ */
+  .worldview {
+    padding: 200px 0;
+    border-top: 1px solid var(--hairline-strong);
+  }
+  .worldview .body {
+    font-family: var(--hel); font-weight: 300;
+    font-size: clamp(36px, 4.4vw, 68px);
+    line-height: 1.12; letter-spacing: -0.025em;
+    max-width: 1280px; margin-left: 248px;
+  }
+  .worldview .body .em { color: var(--mineral); }
+  .worldview .body .dim { color: var(--muted); }
+  .worldview .byline {
+    margin-top: 72px;
+    padding-top: 24px;
+    border-top: 1px solid var(--hairline);
+    max-width: 1280px; margin-left: 248px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+    font-family: var(--futura); font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted);
+  }
+  .worldview .byline .a { color: var(--ink); }
+
+  /* ============================================================ */
+  /* THINKING                                                     */
+  /* ============================================================ */
+  .think-grid {
+    display: grid; grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 32px;
+    border-top: 1px solid var(--ink);
+    padding-top: 48px;
+  }
+  .think {
+    display: flex; flex-direction: column;
+    transition: opacity .3s;
+  }
+  .think:hover { opacity: 0.85; }
+  .think .visual {
+    aspect-ratio: 4/3;
+    position: relative; overflow: hidden;
+    margin-bottom: 20px;
+    background: #0a0a0a;
+  }
+  .think .visual .stripe { position: absolute; inset: 0; }
+  .think.t-book .visual .stripe { background: repeating-linear-gradient(0deg, transparent 0 6px, rgba(255,255,255,0.05) 6px 7px), linear-gradient(180deg, #141414 0%, #4a3624 100%); }
+  .think.t-davos .visual .stripe { background: repeating-linear-gradient(90deg, transparent 0 14px, rgba(255,255,255,0.06) 14px 15px), linear-gradient(180deg, #121212 0%, #3a3024 100%); }
+  .think.t-ma .visual .stripe { background: repeating-linear-gradient(45deg, transparent 0 9px, rgba(255,255,255,0.05) 9px 10px), linear-gradient(135deg, #141414 0%, #4a3a28 100%); }
+  .think .visual .cap { position: absolute; bottom: 14px; left: 14px; font-family: var(--futura); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink); }
+  .think .tag { font-family: var(--futura); font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--mineral); margin-bottom: 14px; }
+  .think h4 { font-family: var(--hel); font-weight: 300; font-size: clamp(22px, 2vw, 32px); line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 12px; }
+  .think.feature h4 { font-size: clamp(28px, 2.6vw, 42px); }
+  .think p { font-size: 13.5px; line-height: 1.55; color: var(--muted); margin: 0; }
+
+  /* ============================================================ */
+  /* CTA / DMC                                                    */
+  /* ============================================================ */
+  .cta-cols {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; margin-top: 64px;
+    border-top: 1px solid var(--ink);
+    padding-top: 48px;
+  }
+  .cta-col h4 { font-family: var(--hel); font-weight: 300; font-size: 28px; line-height: 1.15; letter-spacing: -0.02em; margin: 0 0 28px; }
+  .cta-col ul { list-style: none; padding: 0; margin: 0; }
+  .cta-col li {
+    display: grid; grid-template-columns: 36px 1fr;
+    gap: 16px; padding: 22px 0;
+    border-bottom: 1px solid var(--hairline);
+    font-size: 15.5px; line-height: 1.55;
+  }
+  .cta-col li:first-child { border-top: 1px solid var(--hairline); }
+  .cta-col li .n { font-family: var(--futura); font-size: 10.5px; letter-spacing: 0.22em; color: var(--mineral); padding-top: 3px; }
+
+  /* ============================================================ */
+  /* FOOTER                                                       */
+  /* ============================================================ */
+  footer { padding: 160px 0 40px; border-top: 1px solid var(--ink); }
+  .foot-name {
+    font-family: var(--hel); font-weight: 300;
+    font-size: clamp(120px, 20vw, 320px);
+    line-height: 0.86;
+    letter-spacing: -0.05em;
+    margin: 0 0 80px;
+  }
+  .foot-name .dot { color: var(--mineral); }
+  .foot-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 32px; padding: 48px 0;
+    border-top: 1px solid var(--hairline-strong);
+  }
+  .foot-col h6 {
+    font-family: var(--futura); font-weight: 300;
+    font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--muted); margin: 0 0 20px;
+  }
+  .foot-col a { display: block; padding: 4px 0; font-size: 14px; color: var(--ink); }
+  .foot-col a:hover { color: var(--mineral); }
+  .foot-bottom {
+    display: flex; justify-content: space-between; padding-top: 32px;
+    border-top: 1px solid var(--hairline);
+    font-family: var(--futura); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted);
+  }
+
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#top" class="brand">Arc / Lyrical</a>
+  <div class="center">
+    <a href="#thesis">Thesis</a>
+    <a href="#practice">Practice</a>
+    <a href="#work">Work</a>
+    <a href="#capabilities">Capabilities</a>
+    <a href="#thinking">Thinking</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <div class="right">MMXXVI</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-bg">
+    <img src="assets/nikos-hero.jpg" alt="Nikos Acuña" />
+  </div>
+  <div class="hero-inner wrap">
+    <h1 class="hero-title reveal">
+      Nikos<br/>
+      Acuña<span class="dot">.</span>
+    </h1>
+    <div class="hero-foot">
+      <div>
+        <div class="label-muted reveal d1" style="margin-bottom:14px;">Founder &amp; AI Architect, Lyrical</div>
+        <p class="hero-lede reveal d2">
+          Two decades architecting intelligent systems for Fortune 500 enterprises. Innovation labs that ship production-scale platforms across finance, healthcare, media, luxury, and enterprise software.
+        </p>
+      </div>
+      <div></div>
+      <div class="hero-credit">
+        <div class="label-muted reveal d1" style="margin-bottom:14px;">Plate 01</div>
+        <div class="label-muted reveal d2" style="color:var(--ink);">Portrait · D. Kelleghan</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AT A GLANCE -->
+<section class="glance">
+  <div class="glance-label">At a glance</div>
+  <div class="glance-grid">
+    <div class="glance-cell reveal">
+      <div class="stat">$3B<span class="plus">+</span></div>
+      <div class="cap">In revenue impact from AI solutions delivered</div>
+    </div>
+    <div class="glance-cell reveal d1">
+      <div class="stat">20<span class="plus">+</span></div>
+      <div class="cap">Years engineering AI, ML &amp; generative systems</div>
+    </div>
+    <div class="glance-cell reveal d2">
+      <div class="stat">5<span class="plus">+</span></div>
+      <div class="cap">AI exits, mergers &amp; acquisitions</div>
+    </div>
+    <div class="glance-cell reveal d3">
+      <div class="stat">10<span class="plus">+</span></div>
+      <div class="cap">Active AI ventures &amp; research programs</div>
+    </div>
+  </div>
+</section>
+
+<!-- INDEX BAR -->
+<div class="index-bar">
+  <div class="ix"><span class="n">I</span><span>Operating Thesis</span></div>
+  <div class="ix"><span class="n">II</span><span>Background</span></div>
+  <div class="ix"><span class="n">III</span><span>Practice</span></div>
+  <div class="ix"><span class="n">IV</span><span>Selected Work</span></div>
+  <div class="ix"><span class="n">V</span><span>Capabilities</span></div>
+  <div class="ix"><span class="n">VI</span><span>Clients</span></div>
+  <div class="ix"><span class="n">VII</span><span>Thinking</span></div>
+  <div class="ix"><span class="n">VIII</span><span>For DMC</span></div>
+</div>
+
+<!-- I — THESIS -->
+<section id="thesis">
+  <div class="wrap">
+    <div class="chapter">
+      <span class="num">I</span>
+      <h2 class="reveal">Operating <span style="font-style:italic;font-family:Georgia,serif;font-weight:300;">thesis</span></h2>
+      <div class="meta">Origin<br/>Lyrical, 2024<br/>Practice statement</div>
+    </div>
+  </div>
+  <div class="statement">
+    <div class="wrap">
+      <p class="statement-body reveal d1">
+        The next decade of competitive advantage will be won by enterprises that can <span class="em">compress the distance</span> between frontier AI research and shipped, governed, revenue-generating products. <span class="dim">That compression is what Nikos and his teams build.</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- II — BACKGROUND -->
+<section id="background">
+  <div class="wrap">
+    <div class="chapter">
+      <span class="num">II</span>
+      <h2 class="reveal">A working <span style="font-style:italic;font-family:Georgia,serif;font-weight:300;">record</span><br/>across two decades.</h2>
+      <div class="meta">2006 — 2026<br/>Four facets</div>
+    </div>
+
+    <div class="pillars">
+      <div class="pillar reveal">
+        <span class="n">01</span>
+        <span class="t">Deep AI heritage</span>
+        <h4>Shipping AI before it was mainstream — early NLP and predictive modeling through today's generative and agentic platforms.</h4>
+        <p>15+ years deploying production AI/ML to B2B and B2C audiences serving millions of users.</p>
+      </div>
+      <div class="pillar reveal d1">
+        <span class="n">02</span>
+        <span class="t">Lab architect</span>
+        <h4>Designed and launched corporate AI labs for major technology companies.</h4>
+        <p>Operating frameworks for rapid experimentation, responsible governance, and translation of research into durable advantage.</p>
+      </div>
+      <div class="pillar reveal d2">
+        <span class="n">03</span>
+        <span class="t">Systems thinker</span>
+        <h4>Research at the convergence of AI, quantum, cognitive science, economics, and planetary-scale computation.</h4>
+        <p>Bridging theoretical depth with pragmatic implementation across industries and disciplines.</p>
+      </div>
+      <div class="pillar reveal d3">
+        <span class="n">04</span>
+        <span class="t">Operator &amp; author</span>
+        <h4>Twenty years in systems engineering. Award-winning author of <em style="font-family:Georgia,serif;font-style:italic;">Mindshare</em>.</h4>
+        <p>Strategic business acumen paired with hands-on technical expertise across product, R&amp;D, and operations.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- III — PRACTICE -->
+<section id="practice">
+  <div class="wrap">
+    <div class="chapter">
+      <span class="num">III</span>
+      <h2 class="reveal">Three practices,<br/>one operating <span style="font-style:italic;font-family:Georgia,serif;font-weight:300;">system</span>.</h2>
+      <div class="meta">Lyrical<br/>AI · Research · Design · Innovation</div>
+    </div>
+  </div>
+
+  <div class="practices">
+    <div class="wrap practice v-arc">
+      <div class="meta">
+        <span class="n">III · 01</span>
+        <span class="nm">ARC</span>
+        <span class="yr">Research</span>
+      </div>
+      <div class="copy reveal d1">
+        <h3>Frontier ML,<br/>applied.</h3>
+        <p>Advanced AI research and deep-tech expertise across disciplines and verticals — from frontier ML architecture to applied research re-envisioning human–machine modalities.</p>
+        <div class="tags">
+          <span class="k">Discipline</span><span class="v">LLM architecture</span>
+          <span class="k">Modality</span><span class="v">Multi-modal</span>
+          <span class="k">Stack</span><span class="v">Agentic systems</span>
+          <span class="k">Output</span><span class="v">Applied research</span>
+        </div>
+      </div>
+      <div class="visual reveal d2">
+        <div class="stripe"></div>
+        <span class="cap">Plate 02 · ARC research interface</span>
+      </div>
+    </div>
+
+    <div class="wrap practice v-aiml">
+      <div class="meta">
+        <span class="n">III · 02</span>
+        <span class="nm">AI Media Lab</span>
+        <span class="yr">Design</span>
+      </div>
+      <div class="copy reveal d1">
+        <h3>Design through<br/>augmentation.</h3>
+        <p>Pioneering AI-augmented design across the entire development cycle. Strategic integration of AI into creative and media workflows for luxury brands, A-list studios, and cultural institutions.</p>
+        <div class="tags">
+          <span class="k">Practice</span><span class="v">Generative production</span>
+          <span class="k">Method</span><span class="v">Creative pipelines</span>
+          <span class="k">Audience</span><span class="v">Luxury</span>
+          <span class="k">Audience</span><span class="v">A-list studios</span>
+        </div>
+      </div>
+      <div class="visual reveal d2">
+        <div class="stripe"></div>
+        <span class="cap">Plate 03 · AI Media Lab still</span>
+      </div>
+    </div>
+
+    <div class="wrap practice v-venture">
+      <div class="meta">
+        <span class="n">III · 03</span>
+        <span class="nm">Venture Studio</span>
+        <span class="yr">Innovation</span>
+      </div>
+      <div class="copy reveal d1">
+        <h3>Ship, incubate,<br/>invest.</h3>
+        <p>Building new AI products, platforms, and solutions while incubating and investing in high-growth startups. End-to-end commercialization, from POC to production at enterprise scale.</p>
+        <div class="tags">
+          <span class="k">Stage</span><span class="v">Incubation</span>
+          <span class="k">Vehicle</span><span class="v">Strategic capital</span>
+          <span class="k">Event</span><span class="v">M&amp;A</span>
+          <span class="k">Outcome</span><span class="v">Commercialization</span>
+        </div>
+      </div>
+      <div class="visual reveal d2">
+        <div class="stripe"></div>
+        <span class="cap">Plate 04 · Portfolio specimen</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IV — WORK -->
+<section id="work">
+  <div class="wrap">
+    <div class="chapter">
+      <span class="num">IV</span>
+      <h2 class="reveal">Selected <span style="font-style:italic;font-family:Georgia,serif;font-weight:300;">work</span>,<br/>2006 — 2026.</h2>
+      <div class="meta">Representative<br/>— not exhaustive</div>
+    </div>
+
+    <div class="work-index">
+      <div class="work-row" data-bg="c" data-cap="Plate 04 · Flourish OS">
+        <span class="n">01</span>
+        <span class="ttl">Aion Research Corp — Flourish OS</span>
+        <span class="type">Research / AI Advisory</span>
+        <span class="yr">2026 · Active build</span>
+        <span class="arr">→</span>
+      </div>
+      <div class="work-row" data-bg="b" data-cap="Plate 09 · Faith-aligned intelligence">
+        <span class="n">02</span>
+        <span class="ttl">Bountiful Financial — Bountiful Intelligence</span>
+        <span class="type">Financial Services / AI Lab</span>
+        <span class="yr">2026 · 103 issues</span>
+        <span class="arr">→</span>
+      </div>
+      <div class="work-row" data-bg="a" data-cap="Plate 05 · Retention model">
+        <span class="n">03</span>
+        <span class="ttl">DirecTV — churn reduction</span>
+        <span class="type">Media &amp; Telecom / Retention</span>
+        <span class="yr">2018 · 50% reduction</span>
+        <span class="arr">→</span>
+      </div>
+      <div class="work-row" data-bg="b" data-cap="Plate 06 · Terminal study">
+        <span class="n">04</span>
+        <span class="ttl">JetBlue — brand experience</span>
+        <span class="type">Travel / Customer insight</span>
+        <span class="yr">2017 · 18 factors</span>
+        <span class="arr">→</span>
+      </div>
+      <div class="work-row" data-bg="c" data-cap="Plate 07 · Geographic targeting">
+        <span class="n">05</span>
+        <span class="ttl">Footwear leader — targeting</span>
+        <span class="type">Consumer / Geographic</span>
+        <span class="yr">2019 · Multi-line</span>
+        <span class="arr">→</span>
+      </div>
+      <div class="work-row" data-bg="a" data-cap="Plate 08 · Consolidation">
+        <span class="n">06</span>
+        <span class="ttl">Rocket Fuel × Sizmek</span>
+        <span class="type">Adtech / M&amp;A</span>
+        <span class="yr">2019 · Acquisition</span>
+        <span class="arr">→</span>
+      </div>
+      <div class="work-row" data-bg="b" data-cap="Plate 10 · Agentic systems">
+        <span class="n">07</span>
+        <span class="ttl">JPMorgan Chase — agentic OS</span>
+        <span class="type">Financial Services</span>
+        <span class="yr">2024 · Production</span>
+        <span class="arr">→</span>
+      </div>
+      <div class="work-row" data-bg="c" data-cap="Plate 11 · Atelier study">
+        <span class="n">08</span>
+        <span class="ttl">LVMH — creative pipelines</span>
+        <span class="type">Luxury / AI Media Lab</span>
+        <span class="yr">2025 · Active</span>
+        <span class="arr">→</span>
+      </div>
+      <div class="work-row" data-bg="a" data-cap="Plate 12 · Guest analytics">
+        <span class="n">09</span>
+        <span class="ttl">Disney Parks — experience intelligence</span>
+        <span class="type">Entertainment</span>
+        <span class="yr">2021 · Implemented</span>
+        <span class="arr">→</span>
+      </div>
+    </div>
+  </div>
+  <div class="preview-tile" id="preview"><div class="stripe"></div><span class="cap" id="previewCap"></span></div>
+</section>
+
+<!-- CASE 01 -->
+<section class="case">
+  <div class="wrap">
+    <div class="case-head">
+      <div class="meta">
+        <span class="label-muted">Engagement</span><br/>
+        <span class="v">IV · Specimen 01</span><br/>
+        <span class="label-muted" style="margin-top:8px;display:inline-block;">Year</span><br/>
+        <span class="v">2026</span>
+      </div>
+      <h2 class="reveal">Aion Research Corp.</h2>
+      <div class="meta" style="text-align:right;">
+        <span class="label-muted">Business problem</span><br/>
+        <span class="v">Trusted AI intelligence</span><br/>
+        <span class="label-muted" style="margin-top:8px;display:inline-block;">Our role</span><br/>
+        <span class="v">Research, advisory, simulation</span>
+      </div>
+    </div>
+
+    <div class="case-spread">
+      <div class="case-img c reveal">
+        <div class="stripe"></div>
+        <span class="cap">Plate 04 · Flourish OS</span>
+      </div>
+      <div class="case-body">
+        <div class="step reveal d1">
+          <h5>Challenge</h5>
+          <p>Institutions navigating the AI transition face questions too technical for traditional strategy firms, too consequential for generic AI tools, and too dynamic for static research reports. Faith-based, fiduciary, and mission-sensitive buyers need governed intelligence — auditable sources, versioned models, explicit uncertainty.</p>
+        </div>
+        <div class="step reveal d2">
+          <h5>Approach</h5>
+          <p>A hybrid intelligence company built on one evidence graph, model factory, and governance layer — combining analyst-led research, validated data models, simulation-driven decision support, and retained advisory. The first wedge is Flourish OS: a custom research platform for Bountiful Financial and aligned faith-based institutions studying how AI shapes human flourishing.</p>
+        </div>
+        <div class="step reveal d3">
+          <h5>Decision</h5>
+          <p>A six-layer commercial stack — public research, paid research, institutional data models, simulation tools, standards, and advisory — where every public insight points to a paid product, every product to an institutional model, every model to advisory, and every engagement back into the evidence graph.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="case-result reveal">
+      <div class="num"><span style="color:var(--mineral);">6</span></div>
+      <div class="copy">Layers in the commercial stack — research, data, simulation, standards, advisory — compounding into one intelligence engine for institutions navigating the AI transition.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CASE 02 -->
+<section class="case">
+  <div class="wrap">
+    <div class="case-head">
+      <div class="meta">
+        <span class="label-muted">Engagement</span><br/>
+        <span class="v">IV · Specimen 02</span><br/>
+        <span class="label-muted" style="margin-top:8px;display:inline-block;">Year</span><br/>
+        <span class="v">2026</span>
+      </div>
+      <h2 class="reveal">Bountiful Financial.</h2>
+      <div class="meta" style="text-align:right;">
+        <span class="label-muted">Business problem</span><br/>
+        <span class="v">Faith-aligned index intelligence</span><br/>
+        <span class="label-muted" style="margin-top:8px;display:inline-block;">Our role</span><br/>
+        <span class="v">AI lab + product engineering</span>
+      </div>
+    </div>
+
+    <div class="case-spread">
+      <div class="case-body">
+        <div class="step reveal">
+          <h5>Challenge</h5>
+          <p>Faith-aligned investors need defensible controversy intelligence, faith-enhanced index reporting, and a production data architecture — but the ground state is fragmented vendor pipelines, manual processes, and methodology that lives in spreadsheets. The institutional buyer wants fact sheets, exclusion summaries, and case-level evidence they can put in front of a committee.</p>
+        </div>
+        <div class="step reveal d1">
+          <h5>Approach</h5>
+          <p>Stand up Bountiful Intelligence — an AI lab built on a unified data spine. One Q2–Q3 program ships four interlocking streams: Unified Data Architecture v4.7 (six canonical tables, daily SFTP and quarterly rebalance pipelines, exclusion diff engine, API layer); Living Case Commercial MVP (case-centric controversy intelligence, evidence hub, watchlists and alerts, methodology center); Index Intelligence Reporting across three calc partners (S&amp;P DJI, MerQube, LIXX) with ISIN-keyed entity resolution; and an Azure production posture for SOC 1 readiness and S&amp;P vendor onboarding.</p>
+        </div>
+        <div class="step reveal d2">
+          <h5>Decision</h5>
+          <p>Every public output — fact sheet, exclusion summary, case page — traces back to the canonical schema; the methodology knowledge graph is the proprietary moat, exposing pre-rendered reasons rather than raw rules. A bench-to-paid-pilot motion converts beta validation into ARR.</p>
+        </div>
+      </div>
+      <div class="case-img b reveal d1">
+        <div class="stripe"></div>
+        <span class="cap">Plate 09 · Faith-aligned intelligence</span>
+      </div>
+    </div>
+
+    <div class="case-result reveal">
+      <div class="num"><span style="color:var(--mineral);">4</span></div>
+      <div class="copy">Interlocking streams — foundation, product, reporting, compliance — converging on one data spine and one quarter to ship.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CASE 03 -->
+<section class="case">
+  <div class="wrap">
+    <div class="case-head">
+      <div class="meta">
+        <span class="label-muted">Engagement</span><br/>
+        <span class="v">IV · Specimen 03</span><br/>
+        <span class="label-muted" style="margin-top:8px;display:inline-block;">Year</span><br/>
+        <span class="v">2018</span>
+      </div>
+      <h2 class="reveal">DirecTV.</h2>
+      <div class="meta" style="text-align:right;">
+        <span class="label-muted">Business problem</span><br/>
+        <span class="v">Churn reduction</span><br/>
+        <span class="label-muted" style="margin-top:8px;display:inline-block;">Our role</span><br/>
+        <span class="v">AI customer insight</span>
+      </div>
+    </div>
+
+    <div class="case-spread">
+      <div class="case-img a reveal">
+        <div class="stripe"></div>
+        <span class="cap">Plate 05 · Retention model</span>
+      </div>
+      <div class="case-body">
+        <div class="step reveal d1">
+          <h5>Challenge</h5>
+          <p>DirecTV had been losing customers for several years and could not identify the underlying drivers from existing structured data. They engaged Lyrical to mine online customer conversations and surface the real signal.</p>
+        </div>
+        <div class="step reveal d2">
+          <h5>Approach</h5>
+          <p>We analyzed millions of churn-related conversations to isolate specific interactions where former customers explained why they left. Two-thirds of churn traced to signal loss during weather events disrupting football telecasts.</p>
+        </div>
+        <div class="step reveal d3">
+          <h5>Decision</h5>
+          <p>A retention plan tightly mapped to those interactions — and a continuing methodology to surface new churn drivers as they emerged.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="case-result reveal">
+      <div class="num">50<span class="pct">%</span></div>
+      <div class="copy">Total reduction in churn — with a continuing pipeline for surfacing new drivers as they emerge.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CASE 04 -->
+<section class="case">
+  <div class="wrap">
+    <div class="case-head">
+      <div class="meta">
+        <span class="label-muted">Engagement</span><br/>
+        <span class="v">IV · Specimen 04</span><br/>
+        <span class="label-muted" style="margin-top:8px;display:inline-block;">Year</span><br/>
+        <span class="v">2017</span>
+      </div>
+      <h2 class="reveal">JetBlue.</h2>
+      <div class="meta" style="text-align:right;">
+        <span class="label-muted">Business problem</span><br/>
+        <span class="v">Brand experience</span><br/>
+        <span class="label-muted" style="margin-top:8px;display:inline-block;">Our role</span><br/>
+        <span class="v">18 brand factors</span>
+      </div>
+    </div>
+
+    <div class="case-spread">
+      <div class="case-body">
+        <div class="step reveal">
+          <h5>Challenge</h5>
+          <p>JetBlue needed to translate fragmented customer signal — across gates, terminals, in-flight experience, baggage, and crew interactions — into a concrete, prioritized brand-experience program above and below the wing.</p>
+        </div>
+        <div class="step reveal d1">
+          <h5>Approach</h5>
+          <p>AI-driven customer intelligence ranked opportunities across the full journey: gate comms, TSA flow at SFO, signage, AV, seasonal snacks, delay kits, and crew behaviors — alongside spare-parts positioning, scheduling, and baggage operational changes.</p>
+        </div>
+        <div class="step reveal d2">
+          <h5>Decision</h5>
+          <p>A redesigned Long Beach terminal and new customer-centric executive metrics aligned the organization around a unified experience standard.</p>
+        </div>
+      </div>
+      <div class="case-img b reveal d1">
+        <div class="stripe"></div>
+        <span class="cap">Plate 06 · Terminal study</span>
+      </div>
+    </div>
+
+    <div class="case-result reveal">
+      <div class="num"><span style="color:var(--mineral);">18</span></div>
+      <div class="copy">Brand-experience factors implemented across customer-facing and operational layers, realigning the organization to a unified standard.</div>
+    </div>
+  </div>
+</section>
+
+<!-- V — CAPABILITIES -->
+<section id="capabilities">
+  <div class="wrap">
+    <div class="chapter">
+      <span class="num">V</span>
+      <h2 class="reveal">End-to-end —<br/>frontier research through<br/>full-stack <span style="font-style:italic;font-family:Georgia,serif;font-weight:300;">production</span>.</h2>
+      <div class="meta">Nine domains<br/>One operating system</div>
+    </div>
+
+    <div class="caps">
+      <div class="cap reveal"><div class="n"><span>01</span><span>—</span></div><h4>AI research &amp; engineering</h4><p>Legacy data science and ML through advanced LLM architecture, multi-modal systems, and generative creation.</p></div>
+      <div class="cap reveal d1"><div class="n"><span>02</span><span>—</span></div><h4>Agentic operating systems</h4><p>Agentic orchestration of business, product creation, research intelligence, workflow automation, predictive modeling.</p></div>
+      <div class="cap reveal d2"><div class="n"><span>03</span><span>—</span></div><h4>Market intelligence</h4><p>Competitive, sentiment, controversy, and perception analytics across an integrated media ecosystem.</p></div>
+      <div class="cap reveal"><div class="n"><span>04</span><span>—</span></div><h4>AI Media Lab</h4><p>Proprietary IP and creative production with world-renowned research fellows, AI artists, and practitioners.</p></div>
+      <div class="cap reveal d1"><div class="n"><span>05</span><span>—</span></div><h4>Creative &amp; design studio</h4><p>AI integrated into creative and media workflows — concept to final production — for luxury and cultural institutions.</p></div>
+      <div class="cap reveal d2"><div class="n"><span>06</span><span>—</span></div><h4>Ethics, governance &amp; sovereignty</h4><p>Ethics research, policy development, responsible implementation in partnership with a global think-tank network.</p></div>
+      <div class="cap reveal"><div class="n"><span>07</span><span>—</span></div><h4>Full-stack applications</h4><p>From on-prem data center through large-scale multi-cloud (AWS / GCP / Azure) deployments at organization scale.</p></div>
+      <div class="cap reveal d1"><div class="n"><span>08</span><span>—</span></div><h4>Strategy &amp; transformation</h4><p>Global consultancy and strategic deployments that have generated $500M+ in measured business impact.</p></div>
+      <div class="cap reveal d2"><div class="n"><span>09</span><span>—</span></div><h4>Venture &amp; investments</h4><p>AI startup incubator and venture arm. Advisory across early-stage, M&amp;A, and late-stage acquisition.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- VI — CLIENTS -->
+<section id="clients">
+  <div class="wrap">
+    <div class="chapter">
+      <span class="num">VI</span>
+      <h2 class="reveal">An unusually broad<br/>cross-section of <span style="font-style:italic;font-family:Georgia,serif;font-weight:300;">category leaders</span>.</h2>
+      <div class="meta">Representative<br/>— not exhaustive</div>
+    </div>
+
+    <div class="clients">
+      <div class="client-row reveal">
+        <div class="k">Financial Services<br/>&amp; Insurance</div>
+        <div class="v">JPMorgan Chase<span class="sep">/</span>Wells Fargo<span class="sep">/</span>Citi<span class="sep">/</span>E*TRADE<span class="sep">/</span>John Hancock</div>
+        <div class="ct">05</div>
+      </div>
+      <div class="client-row reveal">
+        <div class="k">Media, Entertainment<br/>&amp; Travel</div>
+        <div class="v">Disney Parks<span class="sep">/</span>DirecTV<span class="sep">/</span>Facebook<span class="sep">/</span>JetBlue<span class="sep">/</span>Delta<span class="sep">/</span>MGM Grand<span class="sep">/</span>Polynesian Cultural Center</div>
+        <div class="ct">07</div>
+      </div>
+      <div class="client-row reveal">
+        <div class="k">Luxury &amp;<br/>Consumer Brands</div>
+        <div class="v">LVMH<span class="sep">/</span>Moët Hennessy<span class="sep">/</span>La Perla<span class="sep">/</span>Ralph Lauren<span class="sep">/</span>Levi's<span class="sep">/</span>Hershey's<span class="sep">/</span>Honda<span class="sep">/</span>Lovesac<span class="sep">/</span>Blissimo</div>
+        <div class="ct">09</div>
+      </div>
+      <div class="client-row reveal">
+        <div class="k">Enterprise<br/>&amp; Technology</div>
+        <div class="v">Microsoft<span class="sep">/</span>Intel<span class="sep">/</span>AT&amp;T<span class="sep">/</span>GE<span class="sep">/</span>Philips<span class="sep">/</span>Novell<span class="sep">/</span>DXC<span class="sep">/</span>Yahoo!</div>
+        <div class="ct">08</div>
+      </div>
+      <div class="client-row reveal">
+        <div class="k">CPG, Health<br/>&amp; Wellness</div>
+        <div class="v">Procter &amp; Gamble<span class="sep">/</span>Unilever<span class="sep">/</span>USANA<span class="sep">/</span>Larkin<span class="sep">/</span>Iroquois Healthcare<span class="sep">/</span>Green Seed</div>
+        <div class="ct">06</div>
+      </div>
+      <div class="client-row reveal">
+        <div class="k">Marketing, Faith<br/>&amp; Civic</div>
+        <div class="v">Publicis Groupe<span class="sep">/</span>DMC<span class="sep">/</span>Sizmek<span class="sep">/</span>Rocket Fuel<span class="sep">/</span>BYU<span class="sep">/</span>Life Elevated Utah</div>
+        <div class="ct">06</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORLDVIEW -->
+<section class="worldview">
+  <div class="wrap">
+    <div style="margin-left:248px; margin-bottom:64px;" class="label-muted reveal">A view from the field</div>
+    <p class="body reveal d1">
+      My research explores <span class="em">emergent intelligence</span> at the convergence of AI, quantum computing, cognitive science, economics, and <span class="dim">planetary-scale computation</span> — bridging theoretical depth with pragmatic implementation.
+    </p>
+    <div class="byline">
+      <span class="a">Nikos Acuna · Founder &amp; AI Architect</span>
+      <span style="text-align:right;">Davos 2026 · Diplomatic Courier delegation</span>
+    </div>
+  </div>
+</section>
+
+<!-- VII — THINKING -->
+<section id="thinking">
+  <div class="wrap">
+    <div class="chapter">
+      <span class="num">VII</span>
+      <h2 class="reveal">On <span style="font-style:italic;font-family:Georgia,serif;font-weight:300;">attention</span>, intelligence,<br/>and the architecture of a republic.</h2>
+      <div class="meta">Books<br/>Forums<br/>Heritage</div>
+    </div>
+
+    <div class="think-grid">
+      <div class="think t-book feature reveal">
+        <div class="visual"><div class="stripe"></div><span class="cap">Plate 13 · Mindshare cover</span></div>
+        <span class="tag">Book · award-winning</span>
+        <h4>Mindshare — the future of attention, intelligence, and human-machine collaboration.</h4>
+        <p>Used as a reference text by enterprise innovation teams designing next-generation customer experiences.</p>
+      </div>
+      <div class="think t-davos reveal d1">
+        <div class="visual"><div class="stripe"></div><span class="cap">Plate 14 · Davos stage</span></div>
+        <span class="tag">Davos 2026 · WEF</span>
+        <h4>Universal Data Sovereignty</h4>
+        <p>Presented as part of the Diplomatic Courier delegation — the architecture of a Republic of Intelligences, drawing on Heidegger and Bratton.</p>
+      </div>
+      <div class="think t-ma reveal d2">
+        <div class="visual"><div class="stripe"></div><span class="cap">Plate 15 · Consolidation study</span></div>
+        <span class="tag">M&amp;A heritage</span>
+        <h4>Rocket Fuel · Sizmek</h4>
+        <p>Operating experience through major adtech consolidation — a working view of how AI assets are valued, integrated, accelerated, or stranded.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIII — CTA / DMC -->
+<section id="contact" style="padding: 160px 0; border-top: 1px solid var(--hairline-strong);">
+  <div class="wrap">
+    <div class="chapter" style="padding-top:0;border-top:0;">
+      <span class="num">VIII</span>
+      <h2 class="reveal">The next AI wave is<br/><span style="font-style:italic;font-family:Georgia,serif;font-weight:300;">enterprise-grade</span>, governed, agentic.</h2>
+      <div class="meta">CTO Roundtable<br/>DMC · 2026</div>
+    </div>
+
+    <div class="cta-cols">
+      <div class="cta-col">
+        <h4 class="reveal">What CTOs take away</h4>
+        <ul>
+          <li class="reveal d1"><span class="n">01</span><span>A calibrated read on which AI investments will compound — versus which become technical debt within 18 months.</span></li>
+          <li class="reveal d2"><span class="n">02</span><span>A reference architecture for agentic operating systems that integrates with existing data, security, and governance estates.</span></li>
+          <li class="reveal d3"><span class="n">03</span><span>A roadmap balancing speed-to-value with responsible governance and regulatory readiness.</span></li>
+          <li class="reveal d4"><span class="n">04</span><span>Introductions across Lyrical's research, design, and venture network — foundation-model partners and specialist talent.</span></li>
+          <li class="reveal d4"><span class="n">05</span><span>A candid view on build-vs-buy-vs-partner across the categories the entity competes in.</span></li>
+        </ul>
+      </div>
+      <div class="cta-col">
+        <h4 class="reveal">Discussion topics</h4>
+        <ul>
+          <li class="reveal d1"><span class="n">A</span><span>Where each entity is on the curve from POC → MVP → production AI.</span></li>
+          <li class="reveal d2"><span class="n">B</span><span>Agentic OS patterns that work inside regulated and brand-sensitive enterprises.</span></li>
+          <li class="reveal d3"><span class="n">C</span><span>Governance, ethics, and data sovereignty — designing for the next regulatory wave.</span></li>
+          <li class="reveal d4"><span class="n">D</span><span>Generative AI in creative and media workflows, with luxury and enterprise-grade discipline.</span></li>
+          <li class="reveal d4"><span class="n">E</span><span>Joint research, venture, and commercialization opportunities across the DMC portfolio.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <h2 class="foot-name reveal">
+      Lyrical<span class="dot">.</span>
+    </h2>
+    <div class="foot-grid">
+      <div class="foot-col">
+        <h6>Contact</h6>
+        <a href="#">Nikos Acuna</a>
+        <a href="#">Founder &amp; AI Architect</a>
+        <a href="https://linkedin.com/in/nikosacuna" target="_blank">linkedin / nikosacuna</a>
+      </div>
+      <div class="foot-col">
+        <h6>Practice</h6>
+        <a href="#practice">ARC · Research</a>
+        <a href="#practice">AI Media Lab · Design</a>
+        <a href="#practice">Venture Studio · Innovation</a>
+      </div>
+      <div class="foot-col">
+        <h6>Locations</h6>
+        <a href="#">San Francisco</a>
+        <a href="#">New York</a>
+        <a href="#">Salt Lake City</a>
+      </div>
+      <div class="foot-col">
+        <h6>Briefings</h6>
+        <a href="#contact">DMC Leadership · 2026</a>
+        <a href="#thinking">Davos 2026</a>
+        <a href="#thinking">Mindshare · the book</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© MMXXVI · Lyrical</span>
+      <span>Backgrounder · v3.0</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // scroll reveal
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // work hover preview
+  const preview = document.getElementById('preview');
+  const previewCap = document.getElementById('previewCap');
+  let pvRaf = null;
+  document.querySelectorAll('.work-row').forEach(row => {
+    row.addEventListener('mouseenter', () => {
+      preview.dataset.bg = row.dataset.bg;
+      previewCap.textContent = row.dataset.cap || '';
+      preview.classList.add('on');
+    });
+    row.addEventListener('mouseleave', () => preview.classList.remove('on'));
+  });
+  window.addEventListener('mousemove', (e) => {
+    if (!pvRaf) pvRaf = requestAnimationFrame(() => {
+      preview.style.left = (e.clientX + 24) + 'px';
+      preview.style.top = (e.clientY - 180) + 'px';
+      pvRaf = null;
+    });
+  });
+
+  // active nav
+  const sections = ['thesis','practice','work','capabilities','thinking','contact'];
+  const navLinks = document.querySelectorAll('.nav .center a');
+  const so = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const id = e.target.id;
+        navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  sections.forEach(id => { const el = document.getElementById(id); if (el) so.observe(el); });
+</script>
+
+</body>
+</html>
