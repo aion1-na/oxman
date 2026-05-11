@@ -536,7 +536,29 @@
   .case-img .stripe { position:absolute; inset:0; }
   .case-img.a .stripe { background: repeating-linear-gradient(0deg, transparent 0 7px, rgba(255,255,255,0.05) 7px 8px), linear-gradient(180deg, #141414 0%, #3a2e20 100%); }
   .case-img.b .stripe { background: repeating-linear-gradient(15deg, transparent 0 10px, rgba(255,255,255,0.05) 10px 11px), linear-gradient(135deg, #121212 0%, #4a3a28 100%); }
-  .case-img .cap { position:absolute; bottom:16px; left:16px; font-family: var(--futura); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink); }
+  .case-img .cap { position:absolute; bottom:16px; left:16px; font-family: var(--futura); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink); z-index: 2; }
+  /* ARC case study — bloom plate */
+  .case-img.plate-bloom { background: #000; }
+  .case-img.plate-bloom img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    animation: bloom-life 18s ease-in-out infinite, bloom-glow 6.8s ease-in-out infinite;
+    will-change: transform, filter;
+  }
+  @keyframes bloom-life {
+    0%, 100% { transform: scale(1.02) rotate(0deg); }
+    50% { transform: scale(1.055) rotate(2.4deg); }
+  }
+  @keyframes bloom-glow {
+    0%, 100% { filter: brightness(0.95) saturate(1) drop-shadow(0 0 22px rgba(34,56,168,0.06)); }
+    50% { filter: brightness(1.12) saturate(1.2) drop-shadow(0 0 60px rgba(34,56,168,0.5)); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .case-img.plate-bloom img { animation: none !important; }
+  }
   .case-body { padding-top: 8px; }
   .case-body .step {
     padding: 24px 0; border-top: 1px solid var(--hairline);
@@ -1154,8 +1176,8 @@
     </div>
 
     <div class="case-spread">
-      <div class="case-img c reveal">
-        <div class="stripe"></div>
+      <div class="case-img plate-bloom reveal">
+        <img src="assets/plate-arc-bloom.jpg" alt="" loading="lazy" />
         <span class="cap">Plate 04 · Flourish OS</span>
       </div>
       <div class="case-body">
