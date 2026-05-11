@@ -367,7 +367,36 @@
   .practice.v-arc .visual .stripe {
     background:
       repeating-linear-gradient(0deg, transparent 0 5px, rgba(255,255,255,0.04) 5px 6px),
-      linear-gradient(180deg, #161616 0%, #322a20 100%);
+      linear-gradient(180deg, #0c0c10 0%, #1a1830 100%);
+  }
+  /* ARC research interface — orb plate */
+  .plate-orb {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: #000;
+  }
+  .plate-orb img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    animation: orb-life 14s ease-in-out infinite, orb-glow 6.5s ease-in-out infinite;
+    will-change: transform, filter;
+  }
+  @keyframes orb-life {
+    0%, 100% { transform: scale(1) translate(0, 0) rotate(0deg); }
+    25% { transform: scale(1.025) translate(-6px, -4px) rotate(-0.9deg); }
+    50% { transform: scale(1.045) translate(3px, -7px) rotate(1.2deg); }
+    75% { transform: scale(1.02) translate(5px, 2px) rotate(-0.5deg); }
+  }
+  @keyframes orb-glow {
+    0%, 100% { filter: brightness(0.95) saturate(1) drop-shadow(0 0 24px rgba(34,56,168,0.05)); }
+    50% { filter: brightness(1.1) saturate(1.2) drop-shadow(0 0 48px rgba(34,56,168,0.45)); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .plate-orb img { animation: none !important; }
   }
   .practice.v-aiml .visual .stripe {
     background:
@@ -923,7 +952,9 @@
         </div>
       </div>
       <div class="visual reveal d2">
-        <div class="stripe"></div>
+        <div class="plate-orb">
+          <img src="assets/plate-02-orb.webp" alt="" loading="lazy" />
+        </div>
         <span class="cap">Plate 02 · ARC research interface</span>
       </div>
     </div>
